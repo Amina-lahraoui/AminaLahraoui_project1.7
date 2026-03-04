@@ -1,0 +1,54 @@
+@startuml Sequence Diagram - Message Broadcast Flow
+skinparam backgroundColor #FFE5F1
+skinparam defaultFontSize 11
+skinparam sequenceParticipant {
+    backgroundColor #FFF0F8
+    borderColor #9C27B0
+}
+
+title Sequence Diagram - Message Broadcast (Client sends, Server distributes to all)
+
+participant "User 1" as user1
+participant "CView 1" as view1
+participant "CModel 1" as model1
+participant "Socket 1" as socket1
+participant "ClientHandler 1" as handler1
+participant "SModel" as serverModel
+participant "ClientHandler 2" as handler2
+participant "Socket 2" as socket2
+participant "CModel 2" as model2
+participant "CView 2" as view2
+participant "User 2" as user2
+
+== User 1 sends message ==
+user1 -> view1 : Type message, click SEND (or Enter)
+view1 -> model1 : sendMessage(message)
+model1 -> socket1 : dos.writeUTF(message)
+
+== Server receives and formats ==
+socket1 -> handler1 : dis.readUTF()
+handler1 -> serverModel : broadcastMessage(message, username)
+serverModel -> serverModel : format "[HH:mm:ss] Username: message"
+
+== Server distributes to all clients ==
+serverModel -> handler1 : sendMessage(formatted)  [to sender]
+handler1 -> socket1 : dos.writeUTF(formatted)
+socket1 -> model1 : (receiveThread)
+model1 -> view1 : addMessage(formatted)
+view1 -> user1 : Display in chat area
+
+serverModel -> handler2 : sendMessage(formatted)  [to other clients]
+handler2 -> socket2 : dos.writeUTF(formatted)
+
+== User 2 receives ==
+socket2 -> model2 : dis.readUTF()
+model2 -> view2 : addMessage(formatted)
+view2 -> user2 : Display in chat area
+
+note over serverModel
+  Server broadcasts to ALL
+  connected ClientHandlers
+  (except formatting)
+end note
+
+@enduml

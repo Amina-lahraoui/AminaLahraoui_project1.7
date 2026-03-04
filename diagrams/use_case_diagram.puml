@@ -1,0 +1,70 @@
+@startuml Use Case Diagram - GroupChat Application
+skinparam backgroundColor #FFE5F1
+skinparam defaultFontSize 12
+skinparam actor {
+    backgroundColor #E1BEE7
+    borderColor #6B2C91
+}
+skinparam useCase {
+    backgroundColor #FFF0F8
+    borderColor #9C27B0
+}
+
+title Use-Case Diagram  GroupChat Application
+
+left to right direction
+
+' Actors
+actor "AppUser" as user
+actor "Server Administrator" as admin
+
+' Client package
+rectangle "Client Application" {
+    usecase "Connecting to Server" as UC1
+    usecase "Entering Username" as UC2
+    usecase "Sending Message" as UC3
+    usecase "Receiving Messages" as UC4
+    usecase "Requesting All Users\n(allUsers command)" as UC5
+    usecase "Disconnecting\n(end/bye)" as UC6
+    usecase "Viewing Messages\n(Read-Only Mode)" as UC7
+}
+
+' Server package
+rectangle "Server Application" {
+    usecase "Starting Server" as UC8
+    usecase "Stoping Server" as UC9
+    usecase "Accepting Connections" as UC10
+    usecase "Broadcasting Messages" as UC11
+    usecase "Monitoring Connected Users" as UC12
+    usecase "Displaying Activity Log" as UC13
+    usecase "Assigning User Colors" as UC14
+}
+
+' Client actor relationships
+user --> UC1
+user --> UC2
+user --> UC3
+user --> UC4
+user --> UC5
+user --> UC6
+user --> UC7
+
+' Server actor relationships
+admin --> UC8
+admin --> UC9
+admin --> UC10
+admin --> UC11
+admin --> UC12
+admin --> UC13
+
+' Include/Extend relationships
+UC1 ..> UC2 : <<include>>\n(must enter username for full access)
+UC7 ..> UC1 : <<extend>>\n(if no username)
+UC3 ..> UC1 : <<include>>
+UC5 ..> UC1 : <<include>>
+UC6 ..> UC1 : <<include>>
+UC11 ..> UC10 : <<include>>
+UC12 ..> UC10 : <<include>>
+UC14 ..> UC10 : <<include>>
+
+@enduml

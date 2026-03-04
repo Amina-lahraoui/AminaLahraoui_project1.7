@@ -1,0 +1,45 @@
+@startuml Sequence Diagram - Client Disconnection
+skinparam backgroundColor #FFE5F1
+skinparam defaultFontSize 11
+skinparam sequenceParticipant {
+    backgroundColor #FFF0F8
+    borderColor #9C27B0
+}
+
+title Sequence Diagram - Client Disconnection
+participant "AppUser" as user
+participant "CView" as view
+participant "CModel" as model
+participant "Socket" as socket
+participant "ClientHandler" as Handler
+participant "SModel" as ServerModel
+participant "SView" as ServerView
+participant "Other Clients" as others
+
+== User will initiate the disconnect ==
+user -> view : Type "end"/"bye" or click Disconnect
+view -> model : sendMessage("end") or disconnect()
+
+== Client closes connection ==
+model -> socket : dos.writeUTF("end")
+model -> model : set connected = false
+model -> socket : close streams and socket
+model -> view : updateStatus(false)
+view -> user : Show "Offline", disable chat controls
+
+== Server detects disconnection ==
+socket -> handler : IOException or "end" received
+handler -> handler : disconnect()
+handler -> serverModel : clientDisconnected(username)
+handler -> serverModel : removeClient(this)
+
+serverModel -> serverModel : broadcast "[username] has left"
+serverModel -> others : sendMessage(leaveMessage)
+serverModel -> serverView : removeUser(username)
+serverModel -> serverView : updateUserList()
+serverView -> serverView : Refresh user ListView
+
+handler -> socket : close streams and socket
+deactivate handler
+
+@enduml
