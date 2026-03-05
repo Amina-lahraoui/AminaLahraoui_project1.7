@@ -120,7 +120,7 @@ I used PlantUML Pluging where I wrote .puml files and images for the diagrams we
 See the `diagrams/` folder for:
 - Detailed UML Class Diagram
  
-  <img src="diagrams/UMLClassDiagram.png" width="300"  alt="Description of the image">
+  <img src="diagrams/UML_Class_Diagram-UML Class Diagram - TCP GroupChat Application.png" width="300"  alt="Description of the image">
 
 - Deployment Diagram for GroupChat Application:
 <p>
