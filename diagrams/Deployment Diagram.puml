@@ -1,0 +1,110 @@
+@startuml Deployment Diagram
+!theme plain
+skinparam backgroundColor #FFE5F1
+skinparam defaultFontSize 12
+skinparam node {
+    backgroundColor #FFF0F8
+    borderColor #9C27B0
+    borderThickness 2
+}
+skinparam artifact {
+    backgroundColor #E1BEE7
+    borderColor #6B2C91
+}
+skinparam component {
+    backgroundColor #FFF0F8
+    borderColor #673AB7
+}
+
+title Deployment Diagram
+
+node "**Server Node**\n(Physical Machine)" as serverNode {
+    artifact "**tcp_socket_server.jar**\nTCPServer Application" as serverJar
+
+    component "Server Process" as serverProc {
+        component [TCPServer\nMain Entry] as tcpServer
+        component [SModel\nBusiness Logic] as serverModel
+        component [SView\nJavaFX UI] as serverView
+        component [ClientHandler 1\nThread] as ch1
+        component [ClientHandler 2\nThread] as ch2
+        component [ClientHandler N\nThread] as chN
+    }
+
+    database "**server.properties**\nIP: 0.0.0.0\nPort: 3000" as config
+
+    component "ServerSocket\n(Listening Port 3000)" as serverSocket
+}
+
+node "**Client Node 1**\n(Physical Machine)" as client1 {
+    artifact "**tcp_socket_client.jar**\nTCPClient Application" as clientJar1
+
+    component "Client Process" as clientProc1 {
+        component [TCPClient\nMain Entry] as tcpClient1
+        component [CModel] as clientModel1
+        component [CView\nJavaFX UI] as clientView1
+    }
+
+    component "Socket\n(TCP Connection)" as socket1
+}
+
+node "**Client Node 2**\n(Physical Machine)" as client2 {
+    artifact "**tcp_socket_client.jar**\nTCPClient Application" as clientJar2
+
+    component "Client Process" as clientProc2 {
+        component [TCPClient] as tcpClient2
+        component [CModel] as clientModel2
+        component [CView] as clientView2
+    }
+
+    component "Socket\n(TCP Connection)" as socket2
+}
+
+node "**Client Node N**\n(Physical Machine)" as clientN {
+    component "Socket\n(TCP Connection)" as socketN
+}
+
+' Relationships - Server startup
+tcpServer --> serverModel : uses
+tcpServer --> serverView : uses
+serverModel --> config : reads
+serverModel --> serverSocket : creates
+serverSocket --> ch1 : accepts
+serverSocket --> ch2 : accepts
+serverSocket --> chN : accepts
+
+' TCP/IP Communication links (bidirectional)
+serverSocket -[#2196F3,bold]-> socket1 : TCP/IP\nConnection 1
+ch1 -[#2196F3]-> socket1 : readUTF/writeUTF
+
+serverSocket -[#2196F3,bold]-> socket2 : TCP/IP\nConnection 2
+ch2 -[#2196F3]-> socket2 : readUTF/writeUTF
+
+serverSocket -[#2196F3,bold]-> socketN : TCP/IP\nConnection N
+
+' Deployment
+serverJar ..> serverProc : deploys
+clientJar1 ..> clientProc1 : deploys
+clientJar2 ..> clientProc2 : deploys
+
+note right of serverNode
+  **Server Configuration:**
+  - Loaded from server.properties
+  - Thread-per-connection model
+  - java TCPServer
+end note
+
+note right of client1
+  **Client Configuration:**
+  - java TCPClient <IP> <Port>
+  - Example: java TCPClient localhost 3000
+end note
+
+legend right
+  |= Symbol |= Meaning |
+  | Blue lines | TCP/IP socket connections |
+  | Server | Central distributor |
+  | Clients | Multiple simultaneous connections |
+  | Port 3000 | Default server port |
+endlegend
+
+@enduml
