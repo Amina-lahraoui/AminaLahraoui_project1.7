@@ -95,8 +95,12 @@ java TCPClient localhost 3000
 
 ## UML Diagrams
 See the `diagrams/` folder for:
-- DEtailed UML Class Diagram
-- Deployment Diagram for GroupChat Application
+- Detailed UML Class Diagram
+ 
+  <img src="diagrams/UMLClassDiagram.png" width="300"  alt="Description of the image">
+
+- Deployment Diagram for GroupChat Application:
+  <img src="diagrams/UMLClassDiagram.png" width="300"  alt="Description of the image">
 - Sequence Diagram
 - Use case Diagram
 
