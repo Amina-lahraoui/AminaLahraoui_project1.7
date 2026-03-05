@@ -1,5 +1,8 @@
 # CSC3374_GroupChatApplication_Project
 This mini-project is about Java Sockets by implementing a group chat application using TCP (Transmission Control Protocol) and JavaFX. The application enables real-time communication between multiple clients through a central server.
+# Problems that the GroupChatApplication Tackles
+The project tackles issues like connection of multiple client to one server and meassage broadcasting form one-to-many ueser at the same time. This means implementation of thread-per-connection model to handle various connections simoultaneously. In addiition, it uses users authentification using their names and restrict to read-only mode when the name is not provided. 
+
 # CSC3374_GroupChatApplication Project Structure
 ```plaintext
 ParadigmsProject/
@@ -19,9 +22,21 @@ ParadigmsProject/
 │  └── pom.xml
 └── Readme.md                           # Project Description
 ```
-## Quick Start
+##  Interoperability
+The poroject is implemented using Java language.
+## Requirements for GroupChat Application:
+- Java 22 or higher
+- JavaFX 21
+- Maven 3.6+
+  ## Prerequisites of GroupChat Application:
+- Java 17 or higher
+- JavaFX 17
+- Maven
+- IntelliJ IDEA
 
-### Building the Projects
+## Installation and Building of the Project (copy-paste commands)
+
+### To build the project you need to run the following commads:
 
 **Server:**
 ```bash
@@ -63,11 +78,6 @@ java TCPClient localhost 3000
 - **JavaFX GUI**: Modern graphical interface for both server and client
 - **Model-View Separation**: Clean architecture with separated logic and UI
 
-## Requirements
-
-- Java 22 or higher
-- JavaFX 21
-- Maven 3.6+
 
 ## Documentation
 
@@ -82,11 +92,7 @@ This is a Mini Project implementation for a Group Chat Application using:
 - JavaFX for GUI
 - Thread-per-connection architecture
 - Model-View separation pattern
-## Prerequisites
-- Java 17 or higher
-- JavaFX 17
-- Maven
-- IntelliJ IDEA
+
 
 ## How to Run
 Start the server:
